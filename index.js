@@ -3,7 +3,7 @@ canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 const ctx = canvas.getContext('2d')
 
-const stepList = []
+let stepList = []
 let curStepIndex = 0
 let isMouseDown = false
 window.addEventListener('mousedown', () => {
@@ -22,12 +22,20 @@ window.addEventListener('mousemove', (e) => {
         ctx.stroke()
     }
 })
+window.addEventListener('dblclick', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    stepList = []
+})
 window.addEventListener('contextmenu', e => {
     e.preventDefault()
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     reDraw()
 })
 function reDraw() {
+    if (curStepIndex === stepList.length) {
+        curStepIndex = 0
+        return
+    }
     const curStep = stepList[curStepIndex]
     if (curStep === 'newPath') {
         ctx.beginPath()
@@ -36,6 +44,5 @@ function reDraw() {
     ctx.strokeStyle = '#fff'
     ctx.stroke()
     curStepIndex++
-    if (curStepIndex === stepList.length) return
     requestAnimationFrame(() => reDraw())
 }
